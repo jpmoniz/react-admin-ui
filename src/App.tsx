@@ -1,3 +1,6 @@
+// src/App.tsx
+
+import React from 'react';
 import Home from "./pages/home/Home";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Users from "./pages/users/Users";
@@ -13,9 +16,15 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-
+// Create instances of ApolloClient and QueryClient
 const queryClient = new QueryClient();
+
+const apolloClient = new ApolloClient({
+  uri: 'http://localhost:8080/graphql', // Replace with your GraphQL endpoint
+  cache: new InMemoryCache(),
+});
 
 function App() {
   const Layout = () => {
@@ -28,7 +37,9 @@ function App() {
           </div>
           <div className="contentContainer">
             <QueryClientProvider client={queryClient}>
-              <Outlet />
+              <ApolloProvider client={apolloClient}>
+                <Outlet />
+              </ApolloProvider>
             </QueryClientProvider>
           </div>
         </div>
